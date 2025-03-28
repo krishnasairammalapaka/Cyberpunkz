@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import Web3 from 'web3';
+import { transactionService } from '../services/transactionService';
 
 function DonationForm() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -156,6 +157,9 @@ function DonationForm() {
     }
 
     setProcessing(true);
+    let transactionData = null;
+    let receipt = null;
+
     try {
       const selectedCharityData = predefinedCharities.find(c => c.id === selectedCharity);
       if (!selectedCharityData) {
@@ -164,37 +168,51 @@ function DonationForm() {
 
       const ethAmountWei = web3.utils.toWei(ethAmount.toString(), 'ether');
       
-      // Send ETH directly using web3
-      const receipt = await web3.eth.sendTransaction({
+      // Create initial transaction record with 'pending' status
+      transactionData = {
+        donor_id: user.id,
+        charity_id: selectedCharity,
+        amount: parseFloat(amount),
+        eth_amount: parseFloat(ethAmount),
+        status: 'pending',
+        message: message,
+        transaction_hash: null,
+        charities: {
+          name: selectedCharityData.name,
+          eth_address: selectedCharityData.ethAddress
+        }
+      };
+
+      // Save initial transaction
+      const savedTransaction = await transactionService.saveTransaction(transactionData);
+      transactionData = savedTransaction; // Update with saved version that includes ID
+
+      // Send ETH using web3
+      receipt = await web3.eth.sendTransaction({
         from: account,
         to: selectedCharityData.ethAddress,
         value: ethAmountWei,
         gas: 300000
       });
 
-      // Create transaction record
-      const transactionData = {
-        donor_id: user.id,
-        charity_id: selectedCharity,
-        amount: parseFloat(amount),
-        eth_amount: parseFloat(ethAmount),
-        status: 'completed',
-        message: message,
-        transaction_hash: receipt.transactionHash
-      };
-
-      // Save transaction to your backend
-      await fetch(`${process.env.REACT_APP_API_URL}/transactions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(transactionData),
-      });
+      // Update transaction with hash and completed status
+      await transactionService.updateTransactionStatus(
+        receipt.transactionHash,
+        'completed'
+      );
 
       navigate('/transactions');
     } catch (error) {
       console.error('Error processing donation:', error);
+      
+      // Update transaction status to failed if it was created
+      if (transactionData && transactionData.id) {
+        await transactionService.updateTransactionStatus(
+          receipt?.transactionHash || transactionData.transaction_hash,
+          'failed'
+        );
+      }
+      
       alert('Error processing donation. Please try again.');
     } finally {
       setProcessing(false);
