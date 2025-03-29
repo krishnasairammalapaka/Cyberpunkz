@@ -42,6 +42,16 @@ function Navbar() {
             >
               Home
             </Link>
+            <Link
+              to="/contact"
+              className={`${
+                isActivePath('/contact')
+                  ? 'text-blue-600 border-b-2 border-blue-600'
+                  : 'text-gray-600 hover:text-blue-600'
+              } transition-colors duration-200 py-5 text-sm font-medium`}
+            >
+              Contact
+            </Link>
 
             {user ? (
               <>
@@ -135,6 +145,12 @@ function Navbar() {
               className="block px-3 py-2 text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm font-medium"
             >
               Home
+            </Link>
+            <Link
+              to="/contact"
+              className="block px-3 py-2 text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm font-medium"
+            >
+              Contact
             </Link>
             {user ? (
               <>

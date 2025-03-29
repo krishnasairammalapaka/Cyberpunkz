@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import DonationForm from './pages/DonationForm';
 import TransactionHistory from './pages/TransactionHistory';
+import Contact from './pages/Contact';
 import MedicalAid from './pages/categories/MedicalAid';
 import Education from './pages/categories/Education';
 import Environment from './pages/categories/Environment';
@@ -69,6 +70,7 @@ function App() {
           <Route path="/categories/food-aid" element={<FoodAid />} />
           <Route path="/categories/animal-welfare" element={<AnimalWelfare />} />
           <Route path="/categories/orphanage-support" element={<OrphanageSupport />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
     </AuthProvider>
