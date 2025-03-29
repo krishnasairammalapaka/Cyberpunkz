@@ -1,20 +1,71 @@
 {
   "users": [
     {
-      "id": "1",
+      "id": "550e8400-e29b-41d4-a716-446655440000",
       "username": "test1",
       "email": "test@example.com",
       "password": "Test@123",
       "fullName": "sirius",
-      "role": "donor"
+      "role": "donor",
+      "created_at": "2024-01-28T10:00:00Z",
+      "updated_at": "2024-01-28T10:00:00Z"
     },
     {
-      "id": "2",
+      "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
       "username": "jane_doe",
       "email": "jane@example.com",
       "password": "Test123!@#",
       "fullName": "Jane Doe",
-      "role": "charity"
+      "role": "charity",
+      "created_at": "2024-01-28T10:30:00Z",
+      "updated_at": "2024-01-28T10:30:00Z"
+    }
+  ],
+  "sample_donations": [
+    {
+      "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "user_id": "550e8400-e29b-41d4-a716-446655440000",
+      "charity_id": "b5f8c1e6-2d94-4a38-b19f-9c2b6ec0b962",
+      "amount": 100.00,
+      "eth_amount": 0.05,
+      "transaction_hash": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+      "status": "completed",
+      "created_at": "2024-01-28T12:00:00Z",
+      "updated_at": "2024-01-28T12:05:00Z"
+    },
+    {
+      "id": "d1c69c34-5f6a-4a2b-9e6f-c6b1d5c8e901",
+      "user_id": "550e8400-e29b-41d4-a716-446655440000",
+      "charity_id": "c2d8e3f4-6g5h-7i8j-9k0l-m1n2o3p4q5r6",
+      "amount": 50.00,
+      "eth_amount": 0.025,
+      "transaction_hash": "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+      "status": "pending",
+      "created_at": "2024-01-28T14:00:00Z",
+      "updated_at": "2024-01-28T14:00:00Z"
+    }
+  ],
+  "sample_charities": [
+    {
+      "id": "b5f8c1e6-2d94-4a38-b19f-9c2b6ec0b962",
+      "name": "Red Cross",
+      "description": "International humanitarian organization",
+      "created_at": "2024-01-28T09:00:00Z",
+      "updated_at": "2024-01-28T09:00:00Z"
+    },
+    {
+      "id": "c2d8e3f4-6g5h-7i8j-9k0l-m1n2o3p4q5r6",
+      "name": "UNICEF",
+      "description": "United Nations Children's Fund",
+      "created_at": "2024-01-28T09:00:00Z",
+      "updated_at": "2024-01-28T09:00:00Z"
+    },
+    {
+      "id": "d3e9f4g5-7h8i-9j0k-1l2m-n3o4p5q6r7s8",
+      "name": "WWF",
+      "description": "World Wildlife Fund",
+      "created_at": "2024-01-28T09:00:00Z",
+      "updated_at": "2024-01-28T09:00:00Z"
     }
   ]
 } 

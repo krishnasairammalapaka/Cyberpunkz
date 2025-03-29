@@ -10,14 +10,27 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Check for stored user on mount
     const storedUser = authService.getCurrentUser();
-    setUser(storedUser);
+    if (storedUser && storedUser.id) {
+      // Ensure the user has all required fields
+      setUser({
+        ...storedUser,
+        // Ensure these fields exist for compatibility
+        created_at: storedUser.created_at || new Date().toISOString(),
+        updated_at: storedUser.updated_at || new Date().toISOString()
+      });
+    }
     setLoading(false);
   }, []);
 
   const login = async (identifier, password) => {
     const { user, error } = await authService.login(identifier, password);
     if (user) {
-      setUser(user);
+      // Ensure the user has all required fields
+      setUser({
+        ...user,
+        created_at: user.created_at || new Date().toISOString(),
+        updated_at: user.updated_at || new Date().toISOString()
+      });
     }
     return { user, error };
   };
@@ -30,7 +43,12 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     const { user, error } = await authService.register(userData);
     if (user) {
-      setUser(user);
+      // Ensure the user has all required fields
+      setUser({
+        ...user,
+        created_at: user.created_at || new Date().toISOString(),
+        updated_at: user.updated_at || new Date().toISOString()
+      });
     }
     return { user, error };
   };
