@@ -1,8 +1,12 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import DirectionsMap from '../../components/DirectionsMap';
 
 function MedicalAid() {
+  const [selectedCause, setSelectedCause] = useState(null);
+  const [showMap, setShowMap] = useState(false);
+
   const medicalCauses = [
     {
       id: 'med1',
@@ -11,7 +15,11 @@ function MedicalAid() {
       description: 'Provide emergency medical supplies and care to disaster-affected areas',
       ethAddress: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
       targetAmount: 50000,
-      raisedAmount: 32000
+      raisedAmount: 32000,
+      location: {
+        lat: 9.5121,
+        lng: 77.6340
+      }
     },
     {
       id: 'med2',
@@ -20,7 +28,11 @@ function MedicalAid() {
       description: 'Support pediatric care and medical equipment for children\'s hospitals',
       ethAddress: '0x823...456',
       targetAmount: 75000,
-      raisedAmount: 45000
+      raisedAmount: 45000,
+      location: {
+        lat: 34.0522,
+        lng: -118.2437
+      }
     },
     {
       id: 'med3',
@@ -29,9 +41,18 @@ function MedicalAid() {
       description: 'Establish mobile clinics and healthcare facilities in rural areas',
       ethAddress: '0x567...890',
       targetAmount: 60000,
-      raisedAmount: 28000
+      raisedAmount: 28000,
+      location: {
+        lat: 51.5074,
+        lng: -0.1278
+      }
     }
   ];
+
+  const handleShowMap = (cause) => {
+    setSelectedCause(cause);
+    setShowMap(true);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -92,22 +113,70 @@ function MedicalAid() {
                   </div>
                 </div>
 
-                <Link 
-                  to={`/donate?cause=${cause.id}&category=medical`}
-                  className="block"
-                >
+                <div className="grid grid-cols-2 gap-4">
+                  <Link 
+                    to={`/donate?cause=${cause.id}&category=medical`}
+                    className="block"
+                  >
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+                    >
+                      Donate Now
+                    </motion.button>
+                  </Link>
+                  
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+                    onClick={() => handleShowMap(cause)}
+                    className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300"
                   >
-                    Donate Now
+                    View Location
                   </motion.button>
-                </Link>
+                </div>
               </div>
             </motion.div>
           ))}
         </div>
+
+        {/* Map Modal */}
+        <AnimatePresence>
+          {showMap && selectedCause && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+              onClick={() => setShowMap(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.9 }}
+                className="bg-white rounded-xl p-6 w-full max-w-4xl"
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-bold">{selectedCause.name} - Location</h3>
+                  <button
+                    onClick={() => setShowMap(false)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <DirectionsMap
+                  destination={selectedCause.location}
+                  destinationName={selectedCause.name}
+                />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
